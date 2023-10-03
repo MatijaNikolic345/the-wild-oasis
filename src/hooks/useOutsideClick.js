@@ -7,7 +7,7 @@ export function useOutsideClick(handler, listenCapturing = true) {
     function () {
       function handleClick(e) {
         if (ref.current && !ref.current.contains(e.target)) {
-          setTimeout(handler, 100);
+          setTimeout(handler, 1);
         }
       }
 
