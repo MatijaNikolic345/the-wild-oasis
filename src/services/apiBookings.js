@@ -2,15 +2,28 @@ import { PAGE_COUNT } from "../utils/constants";
 import { getToday } from "../utils/helpers";
 import supabase from "./supabase";
 
-export async function getBookings({ page }) {
-  const { data, error, count } = await supabase
-    .from("bookings")
-    .select(
-      "id, created_at, startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName, email)",
-      { count: "exact" }
-    )
-    .range((page - 1) * PAGE_COUNT + 1, page * PAGE_COUNT);
+export async function getBookings({ page, status }) {
+  let query;
+  if (!status || status === "all") {
+    query = await supabase
+      .from("bookings")
+      .select(
+        "id, created_at, startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName, email)",
+        { count: "exact" }
+      )
+      .range((page - 1) * PAGE_COUNT + 1, page * PAGE_COUNT);
+  } else {
+    query = await supabase
+      .from("bookings")
+      .select(
+        "id, created_at, startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName, email)",
+        { count: "exact" }
+      )
+      .eq("status", status)
+      .range((page - 1) * PAGE_COUNT + 1, page * PAGE_COUNT);
+  }
 
+  const { data, error, count } = query;
   if (error) throw new Error("Failed to load bookings");
 
   return { data, count };

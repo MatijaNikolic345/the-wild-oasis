@@ -7,23 +7,24 @@ function useBookings() {
   const [searchParams] = useSearchParams();
   const queryClient = useQueryClient();
   const page = !searchParams.get("page") ? 1 : Number(searchParams.get("page"));
+  const status = searchParams.get("status");
   const { isLoading, data: { data: bookings, count } = {} } = useQuery({
-    queryKey: ["bookings", page],
-    queryFn: () => getBookings({ page }),
+    queryKey: ["bookings", page, status],
+    queryFn: () => getBookings({ page, status }),
   });
   // PRE-FETCHING
   const pageCount = Math.ceil(count / PAGE_COUNT);
 
   if (page < pageCount)
     queryClient.prefetchQuery({
-      queryKey: ["bookings", page + 1],
-      queryFn: () => getBookings({ page: page + 1 }),
+      queryKey: ["bookings", page + 1, status],
+      queryFn: () => getBookings({ page: page + 1, status }),
     });
 
   if (page > 1)
     queryClient.prefetchQuery({
-      queryKey: ["bookings", page - 1],
-      queryFn: () => getBookings({ page: page - 1 }),
+      queryKey: ["bookings", page - 1, status],
+      queryFn: () => getBookings({ page: page - 1, status }),
     });
 
   return { bookings, isLoading, page, count, pageCount };
