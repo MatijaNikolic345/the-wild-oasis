@@ -27,6 +27,7 @@ With this we can implement features such as:
 * For routing - react-router-dom
 * For UI state managment - Context API
 * For remote state managment - React Query(@tanstack/react-query)
+* For the server - Supabase (@supabase/supabase-js)
 * For forms - react-hook-form
 * For success/error pop-ups(toasts) - react-hot-toast
 * For dates - date-fns
